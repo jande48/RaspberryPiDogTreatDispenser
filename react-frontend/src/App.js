@@ -76,6 +76,11 @@ function App() {
     newPickle['scheduledDispenseTreats'].splice(key,1)
     setNewPickle(newPickle)
   }
+  const handleResetTreatClick = (e, {key}) => {
+    const newPickle = {...pickle}
+    newPickle["treatsGivenToday"] = 0
+    setNewPickle(newPickle)
+  }
   
   return (
     <div className="App">
@@ -114,6 +119,7 @@ function App() {
           <Button content="+" onClick={handleIncrement}/>
         </Header>
         </Grid>
+        <Header as='h3' textAlign='center' inverted>Tedi can have {(pickle["maxNumOfTreatsPerDay"]-pickle["treatsGivenToday"])} more treats today</Header>
         <Divider hidden/>
         <Header as='h1' textAlign='center' inverted>Schedule a Treat</Header>
         <Grid relaxed>
@@ -150,6 +156,10 @@ function App() {
         ))
       :'':''}
         <Divider hidden/>
+        <Button 
+            content="Reset Todays Treats to 0"
+            onClick={handleResetTreatClick}
+          />
         </header>
       
 

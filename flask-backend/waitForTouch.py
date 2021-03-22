@@ -78,14 +78,16 @@ class WaitForTouch:
                         #ScheduleTreats().terminate()
                         time.sleep(1)
                         dispenseTreat()
-                        print(mpr121[0].value)
+                        
                         decrementTodaysTreat()
                         playGoodGirl()
                         time.sleep(1)
                         # scheduleTreatsFlask = ScheduleTreats()
                         # thrSchedule = Thread(target= scheduleTreatsFlask.run)
                         # thrSchedule.start()
-                    # else:
+                    else:
+                        playWaitTilTomorrow()
+                        time.sleep(1)
                     #     print(mpr121[1].value)
                     #     time.sleep(1)
                     #     playWaitTilTomorrow()
