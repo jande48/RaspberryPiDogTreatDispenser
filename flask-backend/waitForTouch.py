@@ -85,9 +85,9 @@ class WaitForTouch:
                         # scheduleTreatsFlask = ScheduleTreats()
                         # thrSchedule = Thread(target= scheduleTreatsFlask.run)
                         # thrSchedule.start()
-                    else:
-                        playWaitTilTomorrow()
-                        time.sleep(1)
+                    # else:
+                    #     playWaitTilTomorrow()
+                    #     time.sleep(1)
                     #     print(mpr121[1].value)
                     #     time.sleep(1)
                     #     playWaitTilTomorrow()

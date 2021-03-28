@@ -1,28 +1,28 @@
 {
   "files": {
-    "main.css": "/static/react/css/main.8c8b27cf.chunk.css",
-    "main.js": "/static/react/js/main.79006750.chunk.js",
-    "main.js.map": "/static/react/js/main.79006750.chunk.js.map",
-    "runtime-main.js": "/static/react/js/runtime-main.93f19fc0.js",
-    "runtime-main.js.map": "/static/react/js/runtime-main.93f19fc0.js.map",
-    "css/2.c822b8ba.chunk.css": "/static/react/css/2.c822b8ba.chunk.css",
-    "js/2.05bd37bd.chunk.js": "/static/react/js/2.05bd37bd.chunk.js",
-    "js/2.05bd37bd.chunk.js.map": "/static/react/js/2.05bd37bd.chunk.js.map",
-    "js/3.34b82325.chunk.js": "/static/react/js/3.34b82325.chunk.js",
-    "js/3.34b82325.chunk.js.map": "/static/react/js/3.34b82325.chunk.js.map",
+    "main.css": "/static/react/css/main.f26370e8.chunk.css",
+    "main.js": "/static/react/js/main.bf6b04d7.chunk.js",
+    "main.js.map": "/static/react/js/main.bf6b04d7.chunk.js.map",
+    "runtime-main.js": "/static/react/js/runtime-main.a97bb043.js",
+    "runtime-main.js.map": "/static/react/js/runtime-main.a97bb043.js.map",
+    "css/2.a9dc58d4.chunk.css": "/static/react/css/2.a9dc58d4.chunk.css",
+    "js/2.f7b3d939.chunk.js": "/static/react/js/2.f7b3d939.chunk.js",
+    "js/2.f7b3d939.chunk.js.map": "/static/react/js/2.f7b3d939.chunk.js.map",
+    "js/3.bf6df241.chunk.js": "/static/react/js/3.bf6df241.chunk.js",
+    "js/3.bf6df241.chunk.js.map": "/static/react/js/3.bf6df241.chunk.js.map",
     "../../templates/index.html": "/static/react/../../templates/index.html",
-    "css/2.c822b8ba.chunk.css.map": "/static/react/css/2.c822b8ba.chunk.css.map",
-    "css/main.8c8b27cf.chunk.css.map": "/static/react/css/main.8c8b27cf.chunk.css.map",
-    "js/2.05bd37bd.chunk.js.LICENSE.txt": "/static/react/js/2.05bd37bd.chunk.js.LICENSE.txt",
-    "media/semantic.min.css": "/static/react/media/outline-icons.ddae9b1b.woff",
+    "css/2.a9dc58d4.chunk.css.map": "/static/react/css/2.a9dc58d4.chunk.css.map",
+    "css/main.f26370e8.chunk.css.map": "/static/react/css/main.f26370e8.chunk.css.map",
+    "js/2.f7b3d939.chunk.js.LICENSE.txt": "/static/react/js/2.f7b3d939.chunk.js.LICENSE.txt",
+    "media/Tedi1.mp4": "/static/react/media/Tedi1.0bc5e8c4.mp4",
     "media/logo.6ce24c58.svg": "/static/react/media/logo.6ce24c58.svg",
     "media/tedi.42565929.jpeg": "/static/react/media/tedi.42565929.jpeg"
   },
   "entrypoints": [
-    "js/runtime-main.93f19fc0.js",
-    "css/2.c822b8ba.chunk.css",
-    "js/2.05bd37bd.chunk.js",
-    "css/main.8c8b27cf.chunk.css",
-    "js/main.79006750.chunk.js"
+    "js/runtime-main.a97bb043.js",
+    "css/2.a9dc58d4.chunk.css",
+    "js/2.f7b3d939.chunk.js",
+    "css/main.f26370e8.chunk.css",
+    "js/main.bf6b04d7.chunk.js"
   ]
 }

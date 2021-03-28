@@ -1,7 +1,14 @@
+.react-time-picker{
+  font-size: 30px;
+  color: #264653;
+}
+
 .App {
   text-align: center;
 }
 
+.e-time-wrapper
+/* 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -26,7 +33,7 @@
 
 .App-link {
   color: #61dafb;
-}
+} */
 
 @keyframes App-logo-spin {
   from {
@@ -35,4 +42,158 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body{
+  background-color: #e76f51;
+  color: #264653;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  line-height: 16px;
+  margin: 0;
+}
+
+.container{
+  width: 90%;
+  margin: auto;
+}
+
+.max-treats-per-day{
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 30px;
+}
+
+img {
+  border-radius: 25%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  padding: 30px 50px;
+}
+
+button{
+  background-color: #264653;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+}
+
+.big-treat-button{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 30px 40px;
+  font-size: 28px;
+  border-radius: 12px;
+}
+
+.max-treats-flexbox-container{
+  display: flex;
+  text-align: center;
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  justify-content: center;
+  align-items: center;
+}
+
+.max-treats-box-1{
+  padding: 10px;
+  flex: 2;
+  margin-top: 0px;
+  font-size: 28px;
+
+}
+
+.max-treats-box-2{
+  padding: 0px;
+  flex: 1;
+  margin-top: 0px;
+
+}
+
+
+.schedule-treat-box-1{
+  flex: 2;
+  padding: 15px;
+  color: #fff;
+  margin: auto;
+
+}
+.react-time-picker{
+  background-color: white;
+}
+.schedule-treat-box-2{
+  flex: 1;
+  padding: 15px;
+  color: #264653;
+  margin: auto;
+}
+.schedule-treat-box-3{
+  flex: 1;
+  padding: 10px;
+}
+.schedule-button{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 15px 30px;
+  font-size: 28px;
+  border-radius: 12px;
+}
+
+.remove-button{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 28px;
+  border-radius: 12px;
+}
+.schedule-flexbox-container{
+  display: flex;
+  text-align: center;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: 5px;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.scheduled-flexbox-container{
+  display: flex;
+  text-align: center;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px #ccc solid;
+  margin-top: 0px;
+  padding-top: 0px;
+  justify-content: center;
+  align-items: center;
+}
+.scheduled-treats{
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 30px;
+}
+.scheduled-treat-box-1{
+  flex: 2;
+  padding: 5px;
+  border-right: 1px #ccc solid;
+
+}
+.scheduled-treat-box-2{
+  flex: 2;
+  padding: 5px;  
+  
 }

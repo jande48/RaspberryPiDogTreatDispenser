@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 # with open('pickleFile.txt', 'wb') as fh:
 #    pickle.dump(mylist, fh)
 def initPickle():
-    treatPickle = {"maxNumOfTreatsPerDay":3,"treatsGivenToday":0,'lastDate': '2021-03-17',"scheduledDispenseTreats":[{'time':'10:00','freq':'Everyday','scheduledDate':[2021,3,17]}]}
+    treatPickle = {"maxNumOfTreatsPerDay":3,"treatsGivenToday":0,'lastDate': '2021-03-17',"scheduledDispenseTreats":[{'time':'10:00','freq':'Everyday','scheduledDate':[2021,3,17]}],"video": {"videoNumber":0,"videoPaths":[]}}
     pickling_on = open("treatPickle.pickle","wb")
     pickle.dump(treatPickle, pickling_on)
     pickling_on.close()
@@ -63,3 +63,16 @@ def waitForTreats(newPickle):
         if diff > 0:
             time.sleep(diff)
             dispenseTreat()
+
+
+def initVideoPickle():
+    video = {"videoNumber":0,"videoPaths":[]}
+    pickling_on = open("videoPickle.pickle","wb")
+    pickle.dump(video, pickling_on)
+    pickling_on.close()
+
+def seeVideoPickle():
+    pickle_off = open("videoPickle.pickle", 'rb')
+    newVideoPickle = pickle.load(pickle_off)
+    print(newVideoPickle)
+    pickle_off.close()
