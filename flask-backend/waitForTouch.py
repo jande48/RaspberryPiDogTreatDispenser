@@ -3,10 +3,7 @@ import time
 import board
 import busio
 import adafruit_mpr121
-
-
 import RPi.GPIO as GPIO
-import time
 
 from threading import Thread
 from pydub import AudioSegment
@@ -16,6 +13,8 @@ from pickleFuncs import canDispenseTreat, decrementTodaysTreat, getPickle
 from dispenseTreat import dispenseTreat
 from scheduleTreats import ScheduleTreats
 from datetime import datetime, timedelta
+
+
 
 class WaitForTouch: 
       
@@ -60,45 +59,48 @@ class WaitForTouch:
                         dispenseTreat()
                         playGoodGirl()
 
-        def determineIfTouched():
+        # def determineIfTouched():
 
             
-            i2c = busio.I2C(board.SCL, board.SDA)
-            mpr121 = adafruit_mpr121.MPR121(i2c)
-            trigger = True
+        #     i2c = busio.I2C(board.SCL, board.SDA)
+        #     mpr121 = adafruit_mpr121.MPR121(i2c)
+        #     trigger = True
             
             
 
 
 
-            while trigger:
+        #     while trigger:
                 
-                if mpr121[1].value:
-                    if canDispenseTreat():
-                        #ScheduleTreats().terminate()
-                        time.sleep(1)
-                        dispenseTreat()
+        #         if mpr121[2].value:
+        #             vars_temp = vars(mpr121[2])
+        #             for item in vars_temp:
+        #                 print(item, ':', vars_temp[item])
+        #             if canDispenseTreat():
+        #                 #ScheduleTreats().terminate()
+        #                 time.sleep(1)
+        #                 dispenseTreat()
                         
-                        decrementTodaysTreat()
-                        playGoodGirl()
-                        time.sleep(1)
-                        # scheduleTreatsFlask = ScheduleTreats()
-                        # thrSchedule = Thread(target= scheduleTreatsFlask.run)
-                        # thrSchedule.start()
-                    # else:
-                    #     playWaitTilTomorrow()
-                    #     time.sleep(1)
-                    #     print(mpr121[1].value)
-                    #     time.sleep(1)
-                    #     playWaitTilTomorrow()
-                    #     time.sleep(1)
-                    #     if trigger:
-                    #         playWaitTilTomorrow()
-                    #         time.sleep(2)
-                    #         trigger = False
-                    trigger=False
+        #                 decrementTodaysTreat()
+        #                 playGoodGirl()
+        #                 time.sleep(1)
+        #                 # scheduleTreatsFlask = ScheduleTreats()
+        #                 # thrSchedule = Thread(target= scheduleTreatsFlask.run)
+        #                 # thrSchedule.start()
+        #             # else:
+        #             #     playWaitTilTomorrow()
+        #             #     time.sleep(1)
+        #             #     print(mpr121[1].value)
+        #             #     time.sleep(1)
+        #             #     playWaitTilTomorrow()
+        #             #     time.sleep(1)
+        #             #     if trigger:
+        #             #         playWaitTilTomorrow()
+        #             #         time.sleep(2)
+        #             #         trigger = False
+        #             trigger=False
                 
-            return 1
+        #     return 1
 
         def playGoodGirl():
             

@@ -9,17 +9,16 @@ import axios from 'axios';
 import {useState,useEffect} from 'react';
 import TimePicker from 'react-time-picker';
 import ReactPlayer from 'react-player'
-//import videoLoader from './videoLoader'
-//console.log(contextLoader(id)
-function importAll(contextLoader) {
-  let videos = []
-  contextLoader.keys().map((id,index) => videos.push(contextLoader(id)) );
-  return videos
-}
 
-const contextLoader = require.context('./videos', true, /\.mp4/);
-const videoPaths = importAll(contextLoader);
-console.log(videoPaths)
+// function importAll(contextLoader) {
+//   let videos = []
+//   contextLoader.keys().map((id,index) => videos.push(contextLoader(id)) );
+//   return videos
+// }
+
+// const contextLoader = require.context('./videos', true, /\.mp4/);
+// const videoPaths = importAll(contextLoader);
+
 
 function App() {
   const [treatStatus, setTreatStatus] = useState("waiting")
@@ -27,19 +26,31 @@ function App() {
   const [selectedDate, handleDateChange] = useState(new Date());
   const [timeUser, setTimeUser] = useState('10:00');
   const [treatFrequency, setTreatFrequency] = useState('Today')
+  const [scheduledDispenseTreats, setScheduledDispenseTreats] = useState([])
+  const [videoPathsPickle,setVideoPathsPickle] = useState([])
 
+  function importAll(contextLoader) {
+    let videos = []
+    contextLoader.keys().map((id,index) => videos.push(contextLoader(id)) );
+    return videos
+  }
+  const contextLoader = require.context('./videos', true, /\.mp4/);  
+  const [videoPaths, setVideoPaths] = useState(importAll(contextLoader))
 
 
   useEffect(() => {
     axios.get('/getPickle').then(
       res => {
         setPickle(res.data)
+        setVideoPathsPickle(res.data['video']['videoPaths'])
+        setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
         //let pickle = res.data
         //importVideos(pickle['video']['videoPaths'])
         //importVideos(pickle['videos'])
       }
     ).catch(err => console.log(err))
-  },[])
+
+  },[videoPaths])
 
   
 
@@ -52,6 +63,9 @@ function App() {
       res => {
         if (res.data.key == 'success') {
           setTreatStatus("dispensed")
+          //let contextLoader = require.context('./videos', true, /\.mp4/);
+          //setVideoPaths(importAll(contextLoader));
+          console.log(importAll(contextLoader))
         }else{
           setTreatStatus("problem")
         }
@@ -63,6 +77,8 @@ function App() {
     axios.post('/setPickle',newPickleAPI).then(
       res => {
         setPickle(res.data)
+        setVideoPathsPickle(res.data['video']['videoPaths'])
+        setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
       }
     ).catch(err => console.log(err))
   }
@@ -87,25 +103,48 @@ function App() {
     newPickle['scheduledDispenseTreats'].push({'time':timeUser,'freq':treatFrequency,'scheduledDate':[parseInt(today.getFullYear()),parseInt(today.getMonth()+1),parseInt(today.getDate())]})
     setNewPickle(newPickle)
   }
-  const handleTreatFreqChange = (e, { value}) => setTreatFrequency(value)
-  const handleRemoveTime = (e, {key}) => {
+  const handleTreatFreqChange = (e) => {
+    setTreatFrequency(e.value)
+  }
+    
+  const handleRemoveTime = (e) => {
+
     const newPickle = {...pickle}
-    newPickle['scheduledDispenseTreats'].splice(key,1)
+    newPickle['scheduledDispenseTreats'].splice(e.target.name,1)
     setNewPickle(newPickle)
   }
-  const handleResetTreatClick = (e, {key}) => {
+  // const handleRemoveTime = (e, {key}) => {
+  //   const newPickle = {...pickle}
+  //   newPickle['scheduledDispenseTreats'].splice(key,1)
+  //   setNewPickle(newPickle)
+  // }
+  const handleResetTreatClick = (e) => {
     const newPickle = {...pickle}
     newPickle["treatsGivenToday"] = 0
     setNewPickle(newPickle)
   }
  
-
+  const handleRemoveVideo = (e) => {
+    const newVideoPaths = [...videoPaths]
+    newVideoPaths.splice(e.target.name,1)
+    axios.post('/removeVideo',{"index":e.target.name}).then(
+      res => {
+        setPickle(res.data)
+        setVideoPathsPickle(res.data['video']['videoPaths'])
+        // let contextLoader = require.context('./videos', true, /\.mp4/);
+        // setVideoPaths(importAll(contextLoader));
+        // console.log(res.data)
+      }
+    ).catch(err => console.log(err))
+  }
+  console.log(videoPaths)
   return (
     <div className="App">
       <div class="container">
         <img src={tedi} alt="Tedi"/>
         { treatStatus=='dispensing' ?
-          <button class="big-treat-button"><i class="fa-spinner fa-spin"></i></button>
+          <h2>... Dispensing Treat ... Recording Video ..</h2>
+          
         :
           <button class="big-treat-button" onClick={handleTreatClick}>Give Tedi a Treat!</button>
         }
@@ -116,7 +155,7 @@ function App() {
             <button class="big-treat-button" onClick={handleDecrement}>-</button>
           </div>
           <div class="max-treats-box-2">
-            <h1>{pickle["maxNumOfTreatsPerDay"]}</h1>
+            <h1>{''+pickle["maxNumOfTreatsPerDay"]+''}</h1>
           </div>
           <div class="max-treats-box-1">
             <button class="big-treat-button" onClick={handleIncrement}>+</button>
@@ -143,8 +182,21 @@ function App() {
           </div>
         </div>
         <h1 class="scheduled-treats">Scheduled Treats</h1>
-        
-          {typeof(pickle['scheduledDispenseTreats']) !== 'undefined' ? pickle['scheduledDispenseTreats'].length > 0 ?
+{/*         
+        {typeof(pickle['scheduledDispenseTreats']) !== 'undefined' ? pickle['scheduledDispenseTreats'].length > 0 ?
+        pickle['scheduledDispenseTreats'].map((itm, i) => (
+          
+          <div class="scheduled-flexbox-container">  
+              <div class="scheduled-treat-box-1">
+                <h2>{itm.freq} {itm.time}</h2> 
+              </div>
+              <div class="scheduled-treat-box-2">
+                <button class="remove-button" onClick={handleRemoveTime} name={i}>Remove</button>
+              </div>  
+            </div>
+        ))
+      :'':''} */}
+        {/* {typeof(pickle['scheduledDispenseTreats']) !== 'undefined' ? pickle['scheduledDispenseTreats'].length > 0 ?
           pickle['scheduledDispenseTreats'].map((itm, i) => (
             <div class="scheduled-flexbox-container">  
               <div class="scheduled-treat-box-1">
@@ -155,20 +207,63 @@ function App() {
               </div>  
             </div>
           ))
-        :'':''}
+        :'':''} */}
+        
+          {scheduledDispenseTreats.map((itm, index) => (
+            <div>
+            <div class="scheduled-flexbox-container">
+              <div class="scheduled-treat-box-1">
+                <h2>{itm.freq} {itm.time}</h2>
+              </div>
+              <div class="scheduled-treat-box-2">
+                <button class="remove-button" onClick={handleRemoveTime} name={index}>Remove</button>
+              </div> 
+            </div>
+            </div>
+          ))}
+        
           <div>
             <button class="remove-button" onClick={handleResetTreatClick}>Reset Treats Today</button>
           </div>
-          { typeof(videoPaths) !== 'undefined' ? videoPaths.length > 0 ?
+
+{/* 
           <div class="playerWrapper">
-          <ReactPlayer
-            //className='react-player fixed-bottom'
-            url={videoPaths[0]['default']}
-            width='100%'
-            height='100%'
-            controls='true'
-          /></div>
-          : '' : ''}
+              <ReactPlayer
+                //className='react-player fixed-bottom'
+                url={'/var/www/piApp/react-frontend/src/videos/Tedi3.mp4'}
+                width='100%'
+                height='100%'
+                controls='true'
+              />
+            </div>
+          { typeof(videoPaths) !== 'undefined'  ? videoPaths.length > 0 ?
+            <div class="playerWrapper">
+              <ReactPlayer
+                //className='react-player fixed-bottom'
+                url={videoPaths[0]['default']}
+                width='100%'
+                height='100%'
+                controls='true'
+              />
+            </div>
+            // videoPathsPickle.map((itm,index) => (
+            // <div>
+            // <div class="playerWrapper">
+            //   <ReactPlayer
+            //     //className='react-player fixed-bottom'
+            //     url={videoPaths[itm['videoNumber']-1]['default']}
+            //     width='100%'
+            //     height='100%'
+            //     controls='true'
+            //   />
+            // </div>
+            // <div class="remove-video-button-box">
+            //   <button class="remove-button" onClick={handleRemoveVideo} name={index}>Delete Video</button>
+            // </div> 
+            // </div>
+            // ))
+          
+          : '' : ''} */}
           
           
       </div>

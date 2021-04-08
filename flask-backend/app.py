@@ -14,9 +14,9 @@ from pydub.playback import play
 #from scheduleTreats import ScheduleTreats
 from dispenseTreat import dispenseTreat
 from pickleFuncs import getPickle
+import os
 
-
-app = aaplication = flask.Flask(__name__)
+app = aplication = flask.Flask(__name__)
 waitForTouchFlask = WaitForTouch() 
 thr = Thread(target = waitForTouchFlask.run) 
 thr.start() 
@@ -51,6 +51,7 @@ def my_index():
 def give_treat():
     JSON_sent = request.get_json()
     if JSON_sent['id'] == 'success':
+
         WaitForTouch().terminate() 
         # ScheduleTreats().terminate()
         time.sleep(0.5)
@@ -64,7 +65,9 @@ def give_treat():
         # scheduleTreatsFlask = ScheduleTreats()
         # thrSchedule = Thread(target= scheduleTreatsFlask.run)
         # thrSchedule.start()
+
     return json.dumps({'key': 'success'})
+
 
 def removePastSchedules(newPickle):
     for i in range(len(newPickle["scheduledDispenseTreats"])-1,-1,-1):
@@ -100,7 +103,8 @@ def getPickle():
 
 @app.route("/setPickle", methods=['POST'])
 def setPickle():
-    WaitForTouch().terminate() 
+
+    waitForTouch().terminate() 
     # ScheduleTreats().terminate()
     # waitForTouchFlask = WaitForTouch()
     # waitForTouchFlask.terminate()
@@ -119,8 +123,21 @@ def setPickle():
     # thrSchedule.start()
     return json.dumps(JSON_sent)
 
-
-
+@app.route("/removeVideo",methods=['POST'])
+def removeVideo():
+    JSON_sent = request.get_json()
+    pickle_off = open("treatPickle.pickle", 'rb')
+    newTreatPickle = pickle.load(pickle_off)
+    pickle_off.close()
+    newTreatPickle = removePastSchedules(newTreatPickle)
+    print(newTreatPickle['video']['videoPaths'])
+    del newTreatPickle['video']['videoPaths'][int(JSON_sent['index'])]
+    print(newTreatPickle['video']['videoPaths'])
+    # del newTreatPickle['video']['videoPaths'][int(JSON_sent['index'])]
+    pickling_on = open("treatPickle.pickle","wb")
+    pickle.dump(newTreatPickle, pickling_on)
+    pickling_on.close()
+    return json.dumps(newTreatPickle)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

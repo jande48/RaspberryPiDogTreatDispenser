@@ -151,11 +151,14 @@ button{
   display: block;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
   text-align: center;
   padding: 10px 20px;
   font-size: 28px;
   border-radius: 12px;
 }
+
 .schedule-flexbox-container{
   display: flex;
   text-align: center;
@@ -188,12 +191,20 @@ button{
 }
 .scheduled-treat-box-1{
   flex: 2;
-  padding: 5px;
-  border-right: 1px #ccc solid;
+  padding: 0px;
+  margin-top: 0px;
+  color: #ccc;
 
 }
 .scheduled-treat-box-2{
   flex: 2;
-  padding: 5px;  
+  padding: 0px;  
+  margin-top: 0px;
+  border-left: 1px #ccc solid;
   
+}
+.remove-video-button-box{
+  flex: 2;
+  padding: 0px;  
+  margin-top: 0px;
 }
