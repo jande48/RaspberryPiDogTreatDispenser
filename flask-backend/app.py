@@ -16,6 +16,8 @@ from dispenseTreat import dispenseTreat
 from takeVideo import TakeVideo
 from pickleFuncs import getPickle
 import os
+import boto3
+from botocore.config import Config
 
 app = aplication = flask.Flask(__name__)
 waitForTouchFlask = WaitForTouch.Instance() 
@@ -73,13 +75,25 @@ def give_treat():
 
 @app.route("/getPresignedURL", methods=['GET'])
 def getPresignedURL():
-    newPickle = getPickle()
+    pickle_off = open("treatPickle.pickle", 'rb')
+    newPickle = pickle.load(pickle_off)
+    pickle_off.close()
+
     videoPaths = newPickle['video']['videoPaths']
     presignedURL = []
+    my_config = Config(region_name = 'us-east-1')
+    secret = os.environ.get('aws_secret_access_key')
+    access = os.environ.get('aws_access_key_id')
+    client = boto3.client(
+        's3',
+        aws_access_key_id=access,
+        aws_secret_access_key=secret,
+        config=my_config
+    )
     for i in videoPaths:
-        responseForURL = client.generate_presigned_url('get_object',Params={'Bucket': 'tedi-video-bucket','Key':x["videoNameAWS"]},ExpiresIn=3600)
-        presignedURL.inset(0,responseForURL)
-
+        responseForURL = client.generate_presigned_url('get_object',Params={'Bucket': 'tedi-video-bucket','Key':i["videoNameAWS"]},ExpiresIn=3600)
+        presignedURL.insert(0,responseForURL)
+    time.sleep(5)
     return json.dumps(presignedURL)
 
 def removePastSchedules(newPickle):

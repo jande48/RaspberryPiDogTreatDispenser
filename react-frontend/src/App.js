@@ -31,16 +31,9 @@ function App() {
   const [presignedAWSvideoURL, setPresignedAWSvideoURL] = useState([])
 
 
-  function importAll(contextLoader) {
-    let videos = []
-    contextLoader.keys().map((id,index) => videos.push(contextLoader(id)) );
-    return videos
-  }
-  const contextLoader = require.context('./videos', true, /\.mp4/);  
-  const [videoPaths, setVideoPaths] = useState(importAll(contextLoader))
-
 
   useEffect(() => {
+    setTreatStatus("waiting")
     axios.get('/getPickle').then(
       res => {
         setPickle(res.data)
@@ -50,14 +43,10 @@ function App() {
     ).catch(err => console.log(err))
     axios.get('/getPresignedURL').then(
       res => {
-        console.log(res.data)
         setPresignedAWSvideoURL(res.data)
-        setVideoPathsPickle(res.data['video']['videoPaths'])
-        setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
-
       }
     ).catch(err => console.log(err))
-  },[videoPaths])
+  },[treatStatus])
 
   
 
@@ -137,7 +126,7 @@ function App() {
   }
  
   const handleRemoveVideo = (e) => {
-    const newVideoPaths = [...videoPaths]
+    const newVideoPaths = [...videoPathsPickle]
     newVideoPaths.splice(e.target.name,1)
     axios.post('/removeVideo',{"index":e.target.name}).then(
       res => {
@@ -149,7 +138,7 @@ function App() {
       }
     ).catch(err => console.log(err))
   }
-  console.log(videoPaths)
+
   return (
     <div className="App">
       <div class="container">
@@ -237,7 +226,36 @@ function App() {
           <div>
             <button class="remove-button" onClick={handleResetTreatClick}>Reset Treats Today</button>
           </div>
-
+          { typeof(presignedAWSvideoURL) !== 'undefined'  ? presignedAWSvideoURL.length > 0 ?
+          <div class="playerWrapper">
+              <ReactPlayer
+                //className='react-player fixed-bottom'
+                url={presignedAWSvideoURL[0]}
+                width='100%'
+                height='100%'
+                controls='true'
+              />
+            </div>
+            : '' :'' }
+          {/* { typeof(presignedAWSvideoURL) !== 'undefined'  ? presignedAWSvideoURL.length > 0 ?
+            presignedAWSvideoURL.map((itm,index) => (
+            <div>
+            <div class="playerWrapper">
+              <ReactPlayer
+                //className='react-player fixed-bottom'
+                url={itm}
+                width='100%'
+                height='100%'
+                controls='true'
+              />
+            </div>
+            <div class="remove-video-button-box">
+              <button class="remove-button" onClick={handleRemoveVideo} name={index}>Delete Video</button>
+            </div> 
+            </div>
+            ))
+          
+          : '' : ''} */}
 {/* 
           <div class="playerWrapper">
               <ReactPlayer
@@ -248,34 +266,7 @@ function App() {
                 controls='true'
               />
             </div>
-          { typeof(videoPaths) !== 'undefined'  ? videoPaths.length > 0 ?
-            <div class="playerWrapper">
-              <ReactPlayer
-                //className='react-player fixed-bottom'
-                url={videoPaths[0]['default']}
-                width='100%'
-                height='100%'
-                controls='true'
-              />
-            </div>
-            // videoPathsPickle.map((itm,index) => (
-            // <div>
-            // <div class="playerWrapper">
-            //   <ReactPlayer
-            //     //className='react-player fixed-bottom'
-            //     url={videoPaths[itm['videoNumber']-1]['default']}
-            //     width='100%'
-            //     height='100%'
-            //     controls='true'
-            //   />
-            // </div>
-            // <div class="remove-video-button-box">
-            //   <button class="remove-button" onClick={handleRemoveVideo} name={index}>Delete Video</button>
-            // </div> 
-            // </div>
-            // ))
-          
-          : '' : ''} */}
+           */}
           
           
       </div>
