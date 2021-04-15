@@ -13,6 +13,7 @@ from pydub import AudioSegment
 from pydub.playback import play
 #from scheduleTreats import ScheduleTreats
 from dispenseTreat import dispenseTreat
+from takeVideo import TakeVideo
 from pickleFuncs import getPickle
 import os
 
@@ -53,8 +54,9 @@ def give_treat():
     if JSON_sent['id'] == 'success':
         waitForTouchGiveTreat = WaitForTouch.Instance()
         waitForTouchGiveTreat.terminate()
-        # WaitForTouch().terminate() 
-        # ScheduleTreats().terminate()
+        takeVideoFlask = TakeVideo.Instance() 
+        takeVideoThr = Thread(target = takeVideoFlask.takeVideo) 
+        takeVideoThr.start() 
         time.sleep(0.5)
         dispenseTreat()
         
@@ -69,6 +71,16 @@ def give_treat():
 
     return json.dumps({'key': 'success'})
 
+@app.route("/getPresignedURL", methods=['GET'])
+def getPresignedURL():
+    newPickle = getPickle()
+    videoPaths = newPickle['video']['videoPaths']
+    presignedURL = []
+    for i in videoPaths:
+        responseForURL = client.generate_presigned_url('get_object',Params={'Bucket': 'tedi-video-bucket','Key':x["videoNameAWS"]},ExpiresIn=3600)
+        presignedURL.inset(0,responseForURL)
+
+    return json.dumps(presignedURL)
 
 def removePastSchedules(newPickle):
     for i in range(len(newPickle["scheduledDispenseTreats"])-1,-1,-1):

@@ -65,17 +65,17 @@ def waitForTreats(newPickle):
             dispenseTreat()
 
 
-def initVideoPickle():
-    video = {"videoNumber":0,"videoPaths":[]}
-    pickling_on = open("videoPickle.pickle","wb")
-    pickle.dump(video, pickling_on)
-    pickling_on.close()
+# def initVideoPickle():
+#     video = {"videoNumber":0,"videoPaths":[]}
+#     pickling_on = open("videoPickle.pickle","wb")
+#     pickle.dump(video, pickling_on)
+#     pickling_on.close()
 
-def seeVideoPickle():
-    pickle_off = open("videoPickle.pickle", 'rb')
-    newVideoPickle = pickle.load(pickle_off)
-    print(newVideoPickle)
-    pickle_off.close()
+# def seeVideoPickle():
+#     pickle_off = open("videoPickle.pickle", 'rb')
+#     newVideoPickle = pickle.load(pickle_off)
+#     print(newVideoPickle)
+#     pickle_off.close()
 
 def initTouchPickle():
     treatPickle = {"singleton":0}

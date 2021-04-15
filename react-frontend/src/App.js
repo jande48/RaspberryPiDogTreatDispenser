@@ -28,6 +28,8 @@ function App() {
   const [treatFrequency, setTreatFrequency] = useState('Today')
   const [scheduledDispenseTreats, setScheduledDispenseTreats] = useState([])
   const [videoPathsPickle,setVideoPathsPickle] = useState([])
+  const [presignedAWSvideoURL, setPresignedAWSvideoURL] = useState([])
+
 
   function importAll(contextLoader) {
     let videos = []
@@ -44,12 +46,17 @@ function App() {
         setPickle(res.data)
         setVideoPathsPickle(res.data['video']['videoPaths'])
         setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
-        //let pickle = res.data
-        //importVideos(pickle['video']['videoPaths'])
-        //importVideos(pickle['videos'])
       }
     ).catch(err => console.log(err))
+    axios.get('/getPresignedURL').then(
+      res => {
+        console.log(res.data)
+        setPresignedAWSvideoURL(res.data)
+        setVideoPathsPickle(res.data['video']['videoPaths'])
+        setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
 
+      }
+    ).catch(err => console.log(err))
   },[videoPaths])
 
   
@@ -63,9 +70,14 @@ function App() {
       res => {
         if (res.data.key == 'success') {
           setTreatStatus("dispensed")
-          //let contextLoader = require.context('./videos', true, /\.mp4/);
-          //setVideoPaths(importAll(contextLoader));
-          console.log(importAll(contextLoader))
+          axios.get('/getPickle').then(
+            res => {
+              setPickle(res.data)
+              setVideoPathsPickle(res.data['video']['videoPaths'])
+              setScheduledDispenseTreats(res.data['scheduledDispenseTreats'])
+            }
+          ).catch(err => console.log(err))
+
         }else{
           setTreatStatus("problem")
         }

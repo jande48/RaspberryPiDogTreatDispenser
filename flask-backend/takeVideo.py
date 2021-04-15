@@ -7,37 +7,8 @@ import os.path
 import os
 import shlex
 from threading import Thread
-
-# def takeVideo():
-#     camera = PiCamera()
-#     pickle_off = open("treatPickle.pickle", 'rb')
-#     totalPickle = pickle.load(pickle_off)
-#     newVideoPickle = totalPickle['video']
-#     pickle_off.close()
-#     videoNumber = int(newVideoPickle["videoNumber"])
-#     videoNumber += 1
-#     newVideoPickle["videoNumber"] = videoNumber
-#     newVideoPath = '../react-frontend/src/videos/Tedi'+str(videoNumber)+'.h264'
-#     videoPathForMP4Convert = '../react-frontend/src/videos/Tedi'+str(videoNumber)
-#     videoPathForReact = './videos/Tedi'+str(videoNumber)+'.mp4'
-#     now = datetime.now()
-#     nowTimestamp = int(datetime.timestamp(now))
-#     newVideoPickle["videoPaths"].append({"pathFlask":(videoPathForMP4Convert+".mp4"),"pathReact":videoPathForReact,"date":nowTimestamp})
-
-#     pickling_on = open("treatPickle.pickle","wb")
-#     totalPickle['video']=newVideoPickle
-#     pickle.dump(totalPickle, pickling_on)
-#     pickling_on.close()
-
-#     camera.start_preview()
-#     camera.start_recording(newVideoPath)
-#     sleep(15)
-#     camera.stop_recording()
-#     camera.stop_preview()
-
-#     command = shlex.split("MP4Box -add {f}.h264 {f}.mp4".format(f=videoPathForMP4Convert))
-#     output = subprocess.check_output(command, stderr=subprocess.STDOUT)
-#     os.remove(videoPathForMP4Convert+".h264")
+import boto3
+from botocore.config import Config
 
 class Singleton:
     """
@@ -82,6 +53,8 @@ class Singleton:
 class TakeVideo():
     def __init__(self):
         self.camera = PiCamera()
+        self.secret = os.environ.get('aws_secret_access_key')
+        self.access = os.environ.get('aws_access_key_id')
 
     def takeVideo(self):
         pickle_off = open("treatPickle.pickle", 'rb')
@@ -89,32 +62,68 @@ class TakeVideo():
         newVideoPickle = totalPickle['video']
         pickle_off.close()
         videoNumber = int(newVideoPickle["videoNumber"])
-        #videoNumber += 1
-        videoNumber = 1
+        videoNumber += 1
         newVideoPickle["videoNumber"] = videoNumber
-        #newVideoPath = '../react-frontend/src/videos/Tedi'+str(videoNumber)+'.h264'
-        newVideoPath = './static/react/media/Tedi1.4a41e76b.h264'
-        #videoPathForMP4Convert = '../react-frontend/src/videos/Tedi'+str(videoNumber)
-        videoPathForMP4Convert = './static/react/media/Tedi1.4a41e76b'
-        videoPathForReact = './videos/Tedi'+str(videoNumber)+'.mp4'
+        newVideoPath = '../videos/Tedi'+str(videoNumber)+'.h264'
+        videoPathForMP4Convert = '../videos/Tedi'+str(videoNumber)
+        videoPathForMP4ConvertWithMP4 = videoPathForMP4Convert + '.mp4'
+        videoNameAWS = 'Tedi'+str(videoNumber)+'.mp4'
         now = datetime.now()
         nowTimestamp = int(datetime.timestamp(now))
-        newVideoPickle["videoPaths"].append({"pathFlask":(videoPathForMP4Convert+".mp4"),"pathReact":videoPathForReact,"date":nowTimestamp,"videoNumber":videoNumber})
+        newVideoPickle["videoPaths"].append({"path":(videoPathForMP4Convert+".mp4"),"date":nowTimestamp,"videoNumber":videoNumber,"videoNameAWS":videoNameAWS})
 
         pickling_on = open("treatPickle.pickle","wb")
         totalPickle['video']=newVideoPickle
         pickle.dump(totalPickle, pickling_on)
         pickling_on.close()
-
         self.camera.start_preview()
         self.camera.start_recording(newVideoPath)
-        sleep(15)
+        sleep(5)
         self.camera.stop_recording()
         self.camera.stop_preview()
-        os.remove(videoPathForMP4Convert+".mp4")
         command = shlex.split("MP4Box -add {f}.h264 {f}.mp4".format(f=videoPathForMP4Convert))
         output = subprocess.check_output(command, stderr=subprocess.STDOUT)
         os.remove(videoPathForMP4Convert+".h264")
+
+        my_config = Config(region_name = 'us-east-1')
+
+        client = boto3.client(
+            's3',
+            aws_access_key_id=self.access,
+            aws_secret_access_key=self.secret,
+            config=my_config
+        )
+
+        reponseForUpload = client.upload_file(videoPathForMP4ConvertWithMP4, 'tedi-video-bucket', videoNameAWS)
+
+    # def takeVideo(self):
+    #     pickle_off = open("treatPickle.pickle", 'rb')
+    #     totalPickle = pickle.load(pickle_off)
+    #     newVideoPickle = totalPickle['video']
+    #     pickle_off.close()
+    #     videoNumber = int(newVideoPickle["videoNumber"])
+    #     videoNumber += 1
+    #     newVideoPickle["videoNumber"] = videoNumber
+    #     newVideoPath = './videos/Tedi'+str(videoNumber)+'.h264'
+    #     videoPathForMP4Convert = './videos/Tedi'+str(videoNumber)
+    #     now = datetime.now()
+    #     nowTimestamp = int(datetime.timestamp(now))
+    #     newVideoPickle["videoPaths"].append({"path":(videoPathForMP4Convert+".mp4"),"date":nowTimestamp,"videoNumber":videoNumber})
+
+    #     pickling_on = open("treatPickle.pickle","wb")
+    #     totalPickle['video']=newVideoPickle
+    #     pickle.dump(totalPickle, pickling_on)
+    #     pickling_on.close()
+
+    #     self.camera.start_preview()
+    #     self.camera.start_recording(newVideoPath)
+    #     sleep(15)
+    #     self.camera.stop_recording()
+    #     self.camera.stop_preview()
+    #     os.remove(videoPathForMP4Convert+".mp4")
+    #     command = shlex.split("MP4Box -add {f}.h264 {f}.mp4".format(f=videoPathForMP4Convert))
+    #     output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+    #     os.remove(videoPathForMP4Convert+".h264")
 
 # class TakeVideo():
 #     def __init__(self): 
@@ -159,3 +168,36 @@ class TakeVideo():
 #         if self._running == True:
             
 #             takeVideo()
+
+
+
+# def takeVideo():
+#     camera = PiCamera()
+#     pickle_off = open("treatPickle.pickle", 'rb')
+#     totalPickle = pickle.load(pickle_off)
+#     newVideoPickle = totalPickle['video']
+#     pickle_off.close()
+#     videoNumber = int(newVideoPickle["videoNumber"])
+#     videoNumber += 1
+#     newVideoPickle["videoNumber"] = videoNumber
+#     newVideoPath = '../react-frontend/src/videos/Tedi'+str(videoNumber)+'.h264'
+#     videoPathForMP4Convert = '../react-frontend/src/videos/Tedi'+str(videoNumber)
+#     videoPathForReact = './videos/Tedi'+str(videoNumber)+'.mp4'
+#     now = datetime.now()
+#     nowTimestamp = int(datetime.timestamp(now))
+#     newVideoPickle["videoPaths"].append({"pathFlask":(videoPathForMP4Convert+".mp4"),"pathReact":videoPathForReact,"date":nowTimestamp})
+
+#     pickling_on = open("treatPickle.pickle","wb")
+#     totalPickle['video']=newVideoPickle
+#     pickle.dump(totalPickle, pickling_on)
+#     pickling_on.close()
+
+#     camera.start_preview()
+#     camera.start_recording(newVideoPath)
+#     sleep(15)
+#     camera.stop_recording()
+#     camera.stop_preview()
+
+#     command = shlex.split("MP4Box -add {f}.h264 {f}.mp4".format(f=videoPathForMP4Convert))
+#     output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+#     os.remove(videoPathForMP4Convert+".h264")
