@@ -17,7 +17,7 @@ from pickleFuncs import getPickle
 import os
 
 app = aplication = flask.Flask(__name__)
-waitForTouchFlask = WaitForTouch() 
+waitForTouchFlask = WaitForTouch.Instance() 
 thr = Thread(target = waitForTouchFlask.run) 
 thr.start() 
 #WaitForTouch().run()
@@ -51,15 +51,16 @@ def my_index():
 def give_treat():
     JSON_sent = request.get_json()
     if JSON_sent['id'] == 'success':
-
-        WaitForTouch().terminate() 
+        waitForTouchGiveTreat = WaitForTouch.Instance()
+        waitForTouchGiveTreat.terminate()
+        # WaitForTouch().terminate() 
         # ScheduleTreats().terminate()
         time.sleep(0.5)
         dispenseTreat()
         
         audio = AudioSegment.from_file('/home/pi/Desktop/DoggieObstacleCoarse/Assets/goodGirlTedi.m4a')
         play(audio)
-        waitForTouchFlask = WaitForTouch() 
+        waitForTouchFlask = WaitForTouch.Instance() 
         thr = Thread(target = waitForTouchFlask.run) 
         thr.start() 
         # scheduleTreatsFlask = ScheduleTreats()
@@ -103,8 +104,9 @@ def getPickle():
 
 @app.route("/setPickle", methods=['POST'])
 def setPickle():
-
-    waitForTouch().terminate() 
+    waitForTouchSetPickle = WaitForTouch.Instance()
+    waitForTouchSetPickle.terminate()
+    # WaitForTouch().terminate() 
     # ScheduleTreats().terminate()
     # waitForTouchFlask = WaitForTouch()
     # waitForTouchFlask.terminate()
@@ -115,7 +117,7 @@ def setPickle():
     pickling_on.close()
     
     #Thread(target = WaitForTouch.run).start() 
-    waitForTouchFlask = WaitForTouch() 
+    waitForTouchFlask = WaitForTouch.Instance() 
     thr = Thread(target = waitForTouchFlask.run) 
     thr.start() 
     # scheduleTreatsFlask = ScheduleTreats()

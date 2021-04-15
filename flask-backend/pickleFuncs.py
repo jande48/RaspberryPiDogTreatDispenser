@@ -76,3 +76,25 @@ def seeVideoPickle():
     newVideoPickle = pickle.load(pickle_off)
     print(newVideoPickle)
     pickle_off.close()
+
+def initTouchPickle():
+    treatPickle = {"singleton":0}
+    pickling_on = open("touchPickle.pickle","wb")
+    pickle.dump(treatPickle, pickling_on)
+    pickling_on.close()
+
+def getTouchPickle():
+    pickle_off = open("touchPickle.pickle", 'rb')
+    newTouchPickle = pickle.load(pickle_off)
+    pickle_off.close()
+    return newTouchPickle["singleton"]
+
+def setTouchPickle(value):
+    pickle_off = open("touchPickle.pickle", 'rb')
+    newTouchPickle = pickle.load(pickle_off)
+    newTouchPickle['singleton'] = value
+    pickle_off.close()
+
+    pickling_on = open("touchPickle.pickle","wb")
+    pickle.dump(newTouchPickle, pickling_on)
+    pickling_on.close()

@@ -1,2 +1,4 @@
-node_modules
-videos
+node_modules/
+venv/
+react-frontend/node_modules/
+flask-backend/__pycache__/
